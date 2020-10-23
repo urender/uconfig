@@ -1,0 +1,22 @@
+#!/usr/bin/ucode
+
+let uconfig = require('uconfig.uconfig');
+let verbose = false;
+let reload = true;
+
+for (let i = 1; i < length(ARGV); i++)
+	switch(ARGV[i]) {
+	case '-v':
+		verbose = true;
+		break;
+	case '-n':
+		reload = false;
+		break;
+	}
+
+try {
+	uconfig.generate(ARGV[0], verbose, reload);
+} catch (e) {
+	warn('Fatal error while generating UCI: ', e, '\n');
+	warn(e.stacktrace[0].context, '\n');
+}

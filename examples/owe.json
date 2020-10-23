@@ -1,0 +1,80 @@
+{
+	"uuid": 2,
+
+	"radios": [
+		{
+			"band": "5G",
+			"country": "DE",
+			"channel-mode": "HE",
+			"channel-width": 80,
+			"channel": 36
+		}
+	],
+
+	"interfaces": [
+		{
+			"name": "WAN",
+			"role": "upstream",
+			"ethernet": [
+				{
+					"select-ports": [
+						"WAN*"
+					]
+				}
+			],
+			"ipv4": {
+				"addressing": "dynamic"
+			},
+			"ipv6": {
+				"addressing": "dynamic"
+			},
+			"ssids": [
+				{
+					"name": "Test-OWE",
+					"wifi-bands": [
+						"5G"
+					],
+					"bss-mode": "ap",
+					"encryption": {
+						"proto": "owe"
+					}
+				}
+			]
+		},
+		{
+			"name": "LAN",
+			"role": "downstream",
+			"services": [ "ssh" ],
+			"ethernet": [
+				{
+					"select-ports": [
+						"LAN*"
+					]
+				}
+			],
+
+			"ipv4": {
+				"addressing": "static",
+				"subnet": "192.168.1.1/24",
+				"dhcp": {
+					"lease-first": 10,
+					"lease-count": 100,
+					"lease-time": "6h"
+				}
+			},
+
+			"ipv6": {
+				"addressing": "static",
+				"dhcpv6": {
+					"mode": "hybrid"
+				}
+			}
+		}
+	],
+
+	"services": {
+		"ssh": {
+			"port": 22
+		}
+	}
+}

@@ -1,0 +1,97 @@
+{
+	"uuid": 2,
+
+	"unit": {
+                "name": "test config AP",
+                "location": "Office",
+                "timezone": "CET-1CEST-2,M3.5.0/02:00:00,M10.5.0/03:00:00 "
+        },
+
+	"radios": [
+		{
+			"band": "2G",
+			"country": "DE",
+			"channel-mode": "HE",
+			"channel-width": 20
+		}, {
+			"band": "5G",
+			"country": "DE",
+			"channel-mode": "HE",
+			"channel-width": 80,
+			"channel": 36
+		}
+	],
+
+	"interfaces": {
+		"wan": {
+			"name": "WAN",
+			"role": "upstream",
+			"services": [ "mdns", "ssh" ],
+			"ethernet": [
+				{
+					"select-ports": [
+						"WAN*", "LAN*"
+					]
+				}
+			],
+			"ipv4": {
+				"addressing": "dynamic"
+			},
+			"ipv6": {
+				"addressing": "dynamic"
+			},
+			"ssids": [
+				{
+					"name": "OpenWrt",
+					"wifi-bands": [
+						"2G", "5G"
+					],
+					"bss-mode": "ap",
+					"encryption": {
+						"proto": "psk2",
+						"key": "aaaaaaaa",
+						"ieee80211w": "optional"
+					}
+				}
+			]
+		},
+		"guest": {
+			"role": "downstream",
+			
+			"isolate-hosts": true,
+
+			"ipv4": {
+				"addressing": "static",
+				"subnet": "192.168.1.1/24",
+				"disallow-upstream-subnet": true,
+				"dhcp": {
+					"lease-first": 10,
+					"lease-count": 100,
+					"lease-time": "6h"
+				}
+			},
+
+			"ssids": [
+				{
+					"name": "Captive",
+					"wifi-bands": [
+						"2G", "5G"
+					],
+					"bss-mode": "ap",
+					"encryption": {
+						"proto": "psk2",
+						"key": "aaaaaaaa",
+						"ieee80211w": "optional"
+					}
+				}
+			]
+
+		}
+	},
+
+	"services": {
+		"ssh": {
+			"port": 22
+		}
+	}
+}

@@ -1,0 +1,46 @@
+description:
+  A device has certain properties that describe its identity and location.
+  These properties are described inside this object.
+type: object
+properties:
+  name:
+    description:
+      This is a free text field, stating the administrative name of the
+      device. It may contain spaces and special characters.
+    type: string
+  hostname:
+    description:
+      The hostname that shall be set on the device. If this field is not set,
+      then the devices serial number is used.
+    type: string
+    format: hostname
+  location:
+    description:
+      This is a free text field, stating the location of the  device. It
+      may contain spaces and special characters.
+    type: string
+  timezone:
+    description:
+      This allows you to change the TZ of the device.
+    type: string
+    examples:
+    - UTC
+    - EST5
+    - CET-1CEST,M3.5.0,M10.5.0/3
+  leds-active:
+    description:
+      This allows forcing all LEDs off.
+    type: boolean
+    default: true
+  password:
+    description:
+      The device shall have no password, create a random root password or use
+      the provided one.
+    oneOf:
+    - type: boolean
+    - type: string
+  tty-login:
+    description:
+      Require username/password login on tty/S ports.
+    type: boolean
+    default: true

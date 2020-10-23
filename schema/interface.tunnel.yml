@@ -1,0 +1,2 @@
+oneOf:
+ - $ref: 'https://uconfig.org/schema/v1/interface/tunnel/mesh-batman/'

@@ -1,0 +1,41 @@
+description:
+  This section defines the physical copper/fiber ports that are members of the
+  interface. Network devices are referenced by their logical names.
+type: object
+properties:
+  select-ports:
+    description:
+      The list of physical network devices that shall be added to the interface.
+      The names are logical ones and wildcardable. "WAN" will use whatever the
+      hardwares default upstream facing port is. "LANx" will use the "x'th"
+      downstream facing ethernet port. LAN* will use all downstream ports.
+    type: array
+    items:
+      type: string
+      examples:
+      - LAN1
+      - LAN2
+      - LAN3
+      - LAN4
+      - LAN*
+      - WAN*
+      - "*"
+  isolate:
+    description:
+      Only allow communication with non-isolated bridge ports when enabled.
+    type: boolean
+    default: false
+  macaddr:
+    description:
+      Enforce a specific MAC to these ports.
+    type: string
+    format: uc-mac
+  vlan-tag:
+    description:
+      Shall the port have a vlan tag.
+    type: string
+    enum:
+    - tagged
+    - un-tagged
+    - auto
+    default: auto

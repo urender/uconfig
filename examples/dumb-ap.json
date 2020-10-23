@@ -1,0 +1,84 @@
+{
+	"uuid": 2,
+	"globals": {
+		"wireless-multimedia": {
+		"profile": "rfc8325"
+		}
+	},
+	"radios": [
+		{
+			"band": "2G",
+			"country": "DE",
+			"channel-mode": "HE",
+			"channel-width": 40
+		},
+		{
+			"band": "5G",
+			"country": "DE",
+			"channel-mode": "HE",
+			"channel-width": 80,
+			"channel": 36
+		}
+	],
+
+	"interfaces": [
+		{
+			"name": "WAN",
+			"role": "upstream",
+			"services": [ "ssh" ],
+			"ethernet": [
+				{
+					"select-ports": [
+						"WAN*"
+					]
+				}
+			],
+			"ipv4": {
+				"addressing": "dynamic"
+			},
+			"ipv6": {
+				"addressing": "dynamic"
+			},
+			"ssids": [
+				{
+					"name": "OpenWrt",
+					"wifi-bands": [
+						"2G", "5G"
+					],
+					"bss-mode": "ap",
+					"encryption": {
+						"proto": "psk2",
+						"key": "OpenWrt!",
+						"ieee80211w": "optional"
+					}
+				}
+			]
+		},
+		{
+			"name": "LAN",
+			"role": "downstream",
+			"services": [ "ssh" ],
+			"ethernet": [
+				{
+					"select-ports": [
+						"LAN*"
+					]
+				}
+			],
+			"ipv4": {
+				"addressing": "static",
+				"subnet": "192.168.11.1/24",
+				"dhcp": {
+					"lease-first": 10,
+					"lease-count": 100,
+					"lease-time": "6h"
+				}
+			}
+		}
+	],
+	"services": {
+		"ssh": {
+			"port": 22
+		}
+	}
+}
