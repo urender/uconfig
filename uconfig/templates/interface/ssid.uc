@@ -7,7 +7,7 @@
 				push(phys, phy);
 
 	if (!length(phys)) {
-		warn("Can't find any suitable radio phy for SSID '%s' settings", ssid.name);
+		warn("Can't find any suitable radio phy for SSID '%s' settings", ssid.ssid);
 
 		return;
 	}
@@ -165,7 +165,7 @@ set wireless.{{ section }}.device={{ phy.section }}
 {%   if (ssid?.encryption?.proto == 'owe-transition'): %}
 {%
         ssid.hidden_ssid = 1;
-        ssid.name += '-OWE';
+        ssid.ssid += '-OWE';
 %}
 set wireless.{{ section }}.ifname={{ s(section) }}
 set wireless.{{ section }}.owe_transition_ifname={{ s('o' + section) }}
@@ -178,7 +178,7 @@ set wireless.{{ section }}.owe_transition_ifname={{ s(basename) }}
 
 {%   if (bss_mode == 'mesh'): %}
 set wireless.{{ section }}.mode={{ bss_mode }}
-set wireless.{{ section }}.mesh_id={{ s(ssid.name) }}
+set wireless.{{ section }}.mesh_id={{ s(ssid.ssid) }}
 set wireless.{{ section }}.mesh_fwding=0
 set wireless.{{ section }}.network=batman_mesh
 set wireless.{{ section }}.mcast_rate=24000
@@ -186,7 +186,7 @@ set wireless.{{ section }}.mcast_rate=24000
 
 {%   if (index([ 'ap', 'sta' ], bss_mode) >= 0): %}
 set wireless.{{ section }}.network={{ network }}
-set wireless.{{ section }}.ssid={{ s(ssid.name) }}
+set wireless.{{ section }}.ssid={{ s(ssid.ssid) }}
 set wireless.{{ section }}.mode={{ s(bss_mode) }}
 set wireless.{{ section }}.bssid={{ ssid.bssid }}
 set wireless.{{ section }}.wds='{{ b(match_wds()) }}'
@@ -324,7 +324,7 @@ set wireless.@wifi-vlan[-1].vid='*'
 {%     if (ssid.rate_limit && (ssid.rate_limit.ingress_rate || ssid.rate_limit.egress_rate)): %}
 
 add ratelimit rate
-set ratelimit.@rate[-1].ssid={{ s(ssid.name) }}
+set ratelimit.@rate[-1].ssid={{ s(ssid.ssid) }}
 set ratelimit.@rate[-1].ingress={{ ssid.rate_limit.ingress_rate }}
 set ratelimit.@rate[-1].egress={{ ssid.rate_limit.egress_rate }}
 {%     endif %}

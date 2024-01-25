@@ -13,7 +13,7 @@ properties:
     - onboarding-ap
     - onboarding-sta
     default: user-defined
-  name:
+  ssid:
     description:
       The broadcasted SSID of the wireless network and for for managed mode
       the SSID of the network you’re connecting to
@@ -30,8 +30,6 @@ properties:
       enum:
       - 2G
       - 5G
-      - 5G-lower
-      - 5G-upper
       - 6G
   bss-mode:
     description:

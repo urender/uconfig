@@ -17,7 +17,7 @@
 			continue;
 
 		/* if the 'other' interface has no wired ports and a single ssid, skip it */
-		if (!other_interface.ethernet && length(interface.ssids) == 1)
+		if (!other_interface.ports && length(interface.ssids) == 1)
 			continue;
 
 		let other_vid = other_interface.vlan.id || '';
@@ -120,7 +120,7 @@
 	if (tunnel_proto in [ 'mesh-batman' ])
 		include('interface/' + tunnel_proto + '.uc', { interface, name, eth_ports, location, netdev, ipv4_mode, ipv6_mode, this_vid });
 
-	if (!interface.ethernet && length(interface.ssids) == 1 && !tunnel_proto)
+	if (!interface.ports && length(interface.ssids) == 1 && !tunnel_proto)
 		/* interfaces with a single ssid and no tunnel do not need a bridge */
 		netdev = '';
 	else

@@ -19,7 +19,7 @@ function discover_ports() {
 	/* Derive ethernet port names and roles from default config */
 	for (let role, spec in capabilities.network) {
 		for (let i, ifname in spec) {
-			role = uc(role);
+			role = lc(role);
 			push(roles[role] = roles[role] || [], {
 				netdev: ifname,
 				index: i
@@ -83,10 +83,8 @@ export function lookup_by_interface_vlan(interface) {
 	 * match this pattern against all known system ethernet ports, remember the
 	 * related netdevs and return them.
 	 */
-	let globs = {};
-	map(interface.ethernet, eth => map(eth.select_ports, glob => globs[glob] = eth.vlan_tag));
 
-	return lookup(globs);
+	return lookup(interface.ports);
 };
 
 export function lookup_by_interface_spec(interface) {

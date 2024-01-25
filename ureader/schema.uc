@@ -615,8 +615,8 @@ function instantiateRadio(location, value, errors) {
 			if (type(value) != "string")
 				push(errors, [ location, "must be of type string" ]);
 
-			if (!(value in [ "2G", "5G", "5G-lower", "5G-upper", "6G" ]))
-				push(errors, [ location, "must be one of \"2G\", \"5G\", \"5G-lower\", \"5G-upper\" or \"6G\"" ]);
+			if (!(value in [ "2G", "5G", "6G" ]))
+				push(errors, [ location, "must be one of \"2G\", \"5G\" or \"6G\"" ]);
 
 			return value;
 		}
@@ -1053,85 +1053,12 @@ function instantiateInterfaceBridge(location, value, errors) {
 	return value;
 }
 
-function instantiateInterfaceEthernet(location, value, errors) {
-	if (type(value) == "object") {
-		let obj = {};
+function instantiateInterfacePorts(location, value, errors) {
+	if (type(value) != "string")
+		push(errors, [ location, "must be of type string" ]);
 
-		function parseSelectPorts(location, value, errors) {
-			if (type(value) == "array") {
-				function parseItem(location, value, errors) {
-					if (type(value) != "string")
-						push(errors, [ location, "must be of type string" ]);
-
-					return value;
-				}
-
-				return map(value, (item, i) => parseItem(location + "/" + i, item, errors));
-			}
-
-			if (type(value) != "array")
-				push(errors, [ location, "must be of type array" ]);
-
-			return value;
-		}
-
-		if (exists(value, "select-ports")) {
-			obj.select_ports = parseSelectPorts(location + "/select-ports", value["select-ports"], errors);
-		}
-
-		function parseIsolate(location, value, errors) {
-			if (type(value) != "bool")
-				push(errors, [ location, "must be of type boolean" ]);
-
-			return value;
-		}
-
-		if (exists(value, "isolate")) {
-			obj.isolate = parseIsolate(location + "/isolate", value["isolate"], errors);
-		}
-		else {
-			obj.isolate = false;
-		}
-
-		function parseMacaddr(location, value, errors) {
-			if (type(value) == "string") {
-				if (!matchUcMac(value))
-					push(errors, [ location, "must be a valid MAC address" ]);
-
-			}
-
-			if (type(value) != "string")
-				push(errors, [ location, "must be of type string" ]);
-
-			return value;
-		}
-
-		if (exists(value, "macaddr")) {
-			obj.macaddr = parseMacaddr(location + "/macaddr", value["macaddr"], errors);
-		}
-
-		function parseVlanTag(location, value, errors) {
-			if (type(value) != "string")
-				push(errors, [ location, "must be of type string" ]);
-
-			if (!(value in [ "tagged", "un-tagged", "auto" ]))
-				push(errors, [ location, "must be one of \"tagged\", \"un-tagged\" or \"auto\"" ]);
-
-			return value;
-		}
-
-		if (exists(value, "vlan-tag")) {
-			obj.vlan_tag = parseVlanTag(location + "/vlan-tag", value["vlan-tag"], errors);
-		}
-		else {
-			obj.vlan_tag = "auto";
-		}
-
-		return obj;
-	}
-
-	if (type(value) != "object")
-		push(errors, [ location, "must be of type object" ]);
+	if (!(value in [ "auto", "tagged", "un-tagged" ]))
+		push(errors, [ location, "must be one of \"auto\", \"tagged\" or \"un-tagged\"" ]);
 
 	return value;
 }
@@ -2784,7 +2711,7 @@ function instantiateInterfaceSsid(location, value, errors) {
 			obj.purpose = "user-defined";
 		}
 
-		function parseName(location, value, errors) {
+		function parseSsid(location, value, errors) {
 			if (type(value) == "string") {
 				if (length(value) > 32)
 					push(errors, [ location, "must be at most 32 characters long" ]);
@@ -2800,8 +2727,8 @@ function instantiateInterfaceSsid(location, value, errors) {
 			return value;
 		}
 
-		if (exists(value, "name")) {
-			obj.name = parseName(location + "/name", value["name"], errors);
+		if (exists(value, "ssid")) {
+			obj.ssid = parseSsid(location + "/ssid", value["ssid"], errors);
 		}
 
 		function parseWifiBands(location, value, errors) {
@@ -2810,8 +2737,8 @@ function instantiateInterfaceSsid(location, value, errors) {
 					if (type(value) != "string")
 						push(errors, [ location, "must be of type string" ]);
 
-					if (!(value in [ "2G", "5G", "5G-lower", "5G-upper", "6G" ]))
-						push(errors, [ location, "must be one of \"2G\", \"5G\", \"5G-lower\", \"5G-upper\" or \"6G\"" ]);
+					if (!(value in [ "2G", "5G", "6G" ]))
+						push(errors, [ location, "must be one of \"2G\", \"5G\" or \"6G\"" ]);
 
 					return value;
 				}
@@ -3342,19 +3269,25 @@ function instantiateInterface(location, value, errors) {
 			obj.bridge = instantiateInterfaceBridge(location + "/bridge", value["bridge"], errors);
 		}
 
-		function parseEthernet(location, value, errors) {
-			if (type(value) == "array") {
-				return map(value, (item, i) => instantiateInterfaceEthernet(location + "/" + i, item, errors));
+		function parsePorts(location, value, errors) {
+			if (type(value) == "object") {
+				let obj = {};
+
+				for (let name, object in value)
+					if (match(name, regexp(name)))
+						obj[name] = instantiateInterfacePorts(location + "/" + name, object, errors);
+
+				return obj;
 			}
 
-			if (type(value) != "array")
-				push(errors, [ location, "must be of type array" ]);
+			if (type(value) != "object")
+				push(errors, [ location, "must be of type object" ]);
 
 			return value;
 		}
 
-		if (exists(value, "ethernet")) {
-			obj.ethernet = parseEthernet(location + "/ethernet", value["ethernet"], errors);
+		if (exists(value, "ports")) {
+			obj.ports = parsePorts(location + "/ports", value["ports"], errors);
 		}
 
 		if (exists(value, "ipv4")) {
@@ -3366,12 +3299,18 @@ function instantiateInterface(location, value, errors) {
 		}
 
 		function parseSsids(location, value, errors) {
-			if (type(value) == "array") {
-				return map(value, (item, i) => instantiateInterfaceSsid(location + "/" + i, item, errors));
+			if (type(value) == "object") {
+				let obj = {};
+
+				for (let name, object in value)
+					if (match(name, regexp(name)))
+						obj[name] = instantiateInterfaceSsid(location + "/" + name, object, errors);
+
+				return obj;
 			}
 
-			if (type(value) != "array")
-				push(errors, [ location, "must be of type array" ]);
+			if (type(value) != "object")
+				push(errors, [ location, "must be of type object" ]);
 
 			return value;
 		}

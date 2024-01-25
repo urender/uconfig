@@ -44,17 +44,20 @@ properties:
     $ref: "https://uconfig.org/schema/v1/interface/vlan/"
   bridge:
     $ref: "https://uconfig.org/schema/v1/interface/bridge/"
-  ethernet:
-    type: array
-    items:
-      $ref: "https://uconfig.org/schema/v1/interface/ethernet/"
+  ports:
+    type: object
+    patternProperties:
+      ".+":
+        $ref: "https://uconfig.org/schema/v1/interface/ports/"
   ipv4:
     $ref: "https://uconfig.org/schema/v1/interface/ipv4/"
   ipv6:
     $ref: "https://uconfig.org/schema/v1/interface/ipv6/"
   ssids:
-    type: array
-    items:
-      $ref: "https://uconfig.org/schema/v1/interface/ssid/"
+    type: object
+    patternProperties:
+      ".+":
+        $ref: "https://uconfig.org/schema/v1/interface/ssid/"
+        additionalProperties: false
   tunnel:
     $ref: "https://uconfig.org/schema/v1/interface/tunnel/"

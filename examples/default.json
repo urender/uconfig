@@ -25,25 +25,20 @@
 
 	"interfaces": {
 		"wan": {
-			"name": "WAN",
 			"role": "upstream",
 			"services": [ "mdns", "ssh" ],
-			"ethernet": [
-				{
-					"select-ports": [
-						"WAN*"
-					]
-				}
-			],
+			"ports": {
+				"wan*": "auto"
+			},
 			"ipv4": {
 				"addressing": "dynamic"
 			},
 			"ipv6": {
 				"addressing": "dynamic"
 			},
-			"ssids": [
-				{
-					"name": "OpenWrt",
+			"ssids": {
+				"main": {
+					"ssid": "OpenWrt",
 					"wifi-bands": [
 						"2G", "5G"
 					],
@@ -54,18 +49,14 @@
 						"ieee80211w": "optional"
 					}
 				}
-			]
+			}
 		},
 		"lan": {
 			"role": "downstream",
 			"services": [ "ssh" ],
-			"ethernet": [
-				{
-					"select-ports": [
-						"LAN*"
-					]
-				}
-			],
+			"ports": {
+				"lan*": "auto"
+			},
 
 			"ipv4": {
 				"addressing": "static",
@@ -84,9 +75,9 @@
 				}
 			},
 
-			"ssids": [
-				{
-					"name": "OpenWrt-NAT",
+			"ssids": {
+				"nat": {
+					"ssid": "OpenWrt-NAT",
 					"wifi-bands": [
 						"2G", "5G"
 					],
@@ -97,8 +88,7 @@
 						"ieee80211w": "optional"
 					}
 				}
-			]
-
+			}
 		}
 	},
 
